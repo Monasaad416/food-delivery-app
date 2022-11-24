@@ -28,7 +28,9 @@ Route::prefix('/client')->group(function(){
     Route::middleware('auth:sanctum')->group( function() {
         //clients routes
         Route::post('/logout',[AuthController::class,'logout']);
-        Route::post('/profile',[AuthController::class,'profile']);
+       
+        Route::get('/profile',[AuthController::class,'profile']);
+        Route::post('/update-profile',[AuthController::class,'updateProfile']);
 
         Route::post('/new-order',[OrderController::class,'newOrder']);
         Route::post('/receive-order',[OrderController::class,'receiveOrder']);
@@ -38,6 +40,9 @@ Route::prefix('/client')->group(function(){
         Route::get('/orders',[OrderController::class,'clientOrders']);
         Route::get('/current-orders',[OrderController::class,'clientCurrentOrders']);
         Route::get('/previews-orders',[OrderController::class,'clientPreviousOrders']);
+
+        Route::Post('/read-notification',[OrderController::class,'readNotification']);
+        Route::get('/notifications',[OrderController::class,'clientNotifications']);
 
     });
 

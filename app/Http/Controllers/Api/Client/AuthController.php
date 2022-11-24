@@ -160,6 +160,20 @@ class AuthController extends Controller
 
     public function profile(Request $request)
     {
+        $loggedClient = $request->user();
+        return $this->apiResponse('200','Display profile successfully',['profile' => [
+            'name' => $loggedClient->name,
+            'email' => $loggedClient->email,
+            'phone' => $loggedClient->phone,
+            'region_id' => $loggedClient->region_id
+        ]
+        ]);
+    }
+
+
+    
+    public function updateProfile(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'name'=> 'nullable|string',
             'email' => [Rule::unique('clients')->ignore($request->user()->id)],

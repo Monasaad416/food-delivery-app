@@ -121,7 +121,6 @@ class OrderController extends Controller
         $restaurant = $request->user();
         $order = Order::find($request->order_id);
 
-        if($order->restaurant_id == $restaurant->id){
 
 
             $order->status = 2 ;
@@ -159,7 +158,7 @@ class OrderController extends Controller
             //send notification to restaurant devices using fcm
             $this->notifyByFirebase($title,$body,$tokens,$data);
 
-        }
+        
 
         return $this->apiResponse('200','Restaurant accept your order',[
             'order' => $order,
@@ -176,9 +175,6 @@ class OrderController extends Controller
             $order->status = 3 ;
             $order->save();
 
-
-
-            ///notification is_read
             $notification = Notification::where('order_id',$order->id)->first();
             $notification->update([
                 'is_read' => 1,
@@ -224,7 +220,6 @@ class OrderController extends Controller
         $order->status = 4 ;
         $order->save();
 
-        ///notification is_read
         $notification = Notification::where('order_id',$order->id)->first();
         $notification->update([
             'is_read' => 1,
@@ -308,7 +303,7 @@ class OrderController extends Controller
 
             'restaurant_id' => 'required|exists:restaurants,id',
             'comment'=> 'required|string',
-            'rating'=> 'required|numeric|in:[1,2,3,4,5]',
+            'rating'=> 'required|numeric|in:1,2,3,4,5',
         ]);
 
         if ($validator->fails()) {
@@ -406,7 +401,40 @@ class OrderController extends Controller
         ]);
     }
 
-    
+
+
+    public function readNotification(Request $request)
+    {
+        $notification = Notification::where('id',$request->notification_id)->where('notifiable_id',$request->user()->id)->first();
+        $notification->update([
+            'is_read' => 1,
+        ]);
+
+        return $this->apiResponse('200','Notification stats',[
+            'is_read' => $notification->is_read,
+        ]);
+    }
+
+
+    public function clientNotifications(Request $request)
+    {
+        $client = $request->user();
+        $notifications = $client->notifications()->paginate(10);
+        return $this->apiResponse('200','Get notifications successfully',[
+            'notifications' => $notifications,
+        ]);
+    }
+
+    public function restaurantNotifications(Request $request)
+    {
+        $restaurant = $request->user();
+        $notifications = $restaurant->notifications()->paginate(10);
+        return $this->apiResponse('200','Get notifications successfully',[
+            'notifications' => $notifications,
+        ]);
+    }
+
+
 
 
 }

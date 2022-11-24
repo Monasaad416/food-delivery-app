@@ -31,7 +31,9 @@ Route::prefix('/restaurant')->group(function(){
 
     Route::middleware('auth:sanctum')->group(function() {
         Route::post('/logout',[AuthController::class,'logout']);
-        Route::post('/profile',[AuthController::class,'profile']);
+        
+        Route::get('/profile',[AuthController::class,'profile']);
+        Route::post('/update-profile',[AuthController::class,'updateProfile']);
 
         Route::post('/create-item',[ItemController::class,'createItem']);
         Route::post('/edit-item/{restaurantId}/{ItemId}',[ItemController::class,'editItem']);
@@ -49,6 +51,9 @@ Route::prefix('/restaurant')->group(function(){
         Route::get('/pending-orders',[orderController::class,'restaurantPendingOrders']);
         Route::get('/accepted-orders',[orderController::class,'restaurantAcceptedOrders']);
         Route::get('/rejected-orders',[orderController::class,'restaurantRejectededOrders']);
+
+        Route::Post('/read-notification',[OrderController::class,'readNotification']);
+        Route::get('/notifications',[OrderController::class,'restaurantNotifications']);
 
     });
 

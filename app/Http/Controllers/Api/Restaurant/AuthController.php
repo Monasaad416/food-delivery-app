@@ -173,8 +173,26 @@ class AuthController extends Controller
         }
     }
 
-
     public function profile(Request $request)
+    {
+        $loggedRestaurant = $request->user();
+        return $this->apiResponse('200','Display profile successfully',['profile' => [
+            [
+                'name' => $loggedRestaurant->name,
+                'email' => $loggedRestaurant->email,
+                'phone' => $loggedRestaurant->phone,
+                'region_id' => $loggedRestaurant->region_id,
+                'min_order_charge' => $loggedRestaurant->min_order_charge,
+                'delivery_fees' => $loggedRestaurant->delivery_fees,
+                'whats_app_url' => $loggedRestaurant->whats_app_url,
+                'phone' => $loggedRestaurant->region_id,
+                'image' => $loggedRestaurant->image,
+            ]
+        ]]);
+    }
+
+
+    public function updateProfile(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name'=> 'nullable|string',
@@ -185,7 +203,6 @@ class AuthController extends Controller
             'min_order_charge' => 'nullable|numeric',
             'delivery_fees' => 'nullable|numeric',
             'whats_app_url' => 'nullable|url',
-            'phone' => 'nullable|string',
             'image' => 'nullable|image',
         ]);
         if ($validator->fails()) {
