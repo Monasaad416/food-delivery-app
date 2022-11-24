@@ -124,40 +124,39 @@
 				<!-- row closed -->
 
 				<!-- row opened -->
-				<div class="row row-sm">
-					<div class="col-12">
+				<div class="row ">
+					<div class="w-100">
 						<div class="card">
 							<div class="card-header bg-transparent pd-b-0 pd-t-20 bd-b-0">
 								<div class="d-flex justify-content-between">
 									<h4 class="card-title mb-0">حالة الطلبات</h4>
 									<i class="mdi mdi-dots-horizontal text-gray"></i>
 								</div>
-								<p class="tx-12 text-muted mb-0">تتبع الطلبات</p>
+								<p class="tx-12 text-muted mb-0">تتبع حالة الطلبات</p>
 							</div>
 							<div class="card-body">
 								<div class="total-revenue">
 									<div>
-									  <h4>120,750</h4>
-									  <label><span class="bg-warning"></span>الطلبات المعلقة</label>
+									  <h4>{{$orders->where('status',1)->sum('total_price')}}جنيه</h4>
+									  <label><span class="bg-secondary"></span>تحت الموافقة</label>
 									</div>
 									<div>
-									  <h4>56,108</h4>
-									  <label><span class="bg-primary"></span>الطلبات الحالية</label>
+									  <h4>{{$orders->where('status',2)->sum('total_price')}}جنيه</h4>
+									  <label><span class="bg-primary"></span>تمت الموافقة</label>
 									</div>
 									<div>
-									  <h4>32,895</h4>
-									  <label><span class="bg-danger"></span>الطلبات المرفوضة</label>
+									  <h4>{{$orders->where('status',3)->sum('total_price')}}جنيه</h4>
+									  <label><span class="bg-danger"></span>مرفوضة</label>
 									</div>
-                                    <br>
-                                    <div>
-                                        <h4>32,895</h4>
-                                        <label><span class="bg-success"></span>الطلبات المستلمة</label>
-                                      </div>
+									<div>
+										<h4>{{$orders->where('status',4)->sum('total_price')}}جنيه</h4>
+										<label><span class="bg-success"></span>مستلمة</label>
+									  </div>
+									  <div>
+										<h4>{{$orders->where('status',5)->sum('total_price')}}جنيه</h4>
+										<label><span class="bg-warning"></span>مرتجعه</label>
+									  </div>
 								  </div>
-                                  <div>
-                                    <h4>32,895</h4>
-                                    <label><span class="bg-danger"></span>الطلبات المرتجعه</label>
-                                  </div>
 								<div id="bar" class="sales-bar mt-4"></div>
 							</div>
 						</div>
@@ -170,91 +169,30 @@
 					<div class="col-xl-4 col-md-12 col-lg-12">
 						<div class="card">
 							<div class="card-header pb-1">
-								<h3 class="card-title mb-2">Recent Customers</h3>
-								<p class="tx-12 mb-0 text-muted">A customer is an individual or business that purchases the goods service has evolved to include real-time</p>
+								<h3 class="card-title mb-2">متابعة العمولات</h3>
+								<p class="tx-12 mb-0 text-muted"> مطاعم قامت بدفع العمولة خلال إسبوع سابق </p>
 							</div>
 							<div class="card-body p-0 customers mt-1">
 								<div class="list-group list-lg-group list-group-flush">
-									<div class="list-group-item list-group-item-action" href="#">
-										<div class="media mt-0">
-											<img class="avatar-lg rounded-circle ml-3 my-auto" src="{{URL::asset('assets/img/faces/3.jpg')}}" alt="Image description">
-											<div class="media-body">
-												<div class="d-flex align-items-center">
-													<div class="mt-0">
-														<h5 class="mb-1 tx-15">Samantha Melon</h5>
-														<p class="mb-0 tx-13 text-muted">User ID: #1234 <span class="text-success ml-2">Paid</span></p>
+									@foreach($clients as $client)
+										<div class="list-group-item list-group-item-action" href="#">
+											<div class="media mt-0">
+												<img class="avatar-lg rounded-circle ml-3 my-auto" src="{{URL::asset('adminassets/img/faces/3.jpg')}}" alt="Image description">
+												<div class="media-body">
+													<div class="d-flex align-items-center">
+														<div class="mt-0">
+															<h5 class="mb-1 tx-15">{{$client->name}}</h5>
+															<p class="mb-0 tx-13 text-muted">User ID: #{{$client->id}}<span class="text-success ml-2">Paid</span></p>
+														</div>
+														<span class="mr-auto wd-45p fs-16 mt-2">
+															<div id="spark1" class="wd-100p"></div>
+														</span>
 													</div>
-													<span class="mr-auto wd-45p fs-16 mt-2">
-														<div id="spark1" class="wd-100p"></div>
-													</span>
 												</div>
 											</div>
 										</div>
-									</div>
-									<div class="list-group-item list-group-item-action" href="#">
-										<div class="media mt-0">
-											<img class="avatar-lg rounded-circle ml-3 my-auto" src="{{URL::asset('assets/img/faces/11.jpg')}}" alt="Image description">
-											<div class="media-body">
-												<div class="d-flex align-items-center">
-													<div class="mt-1">
-														<h5 class="mb-1 tx-15">Jimmy Changa</h5>
-														<p class="mb-0 tx-13 text-muted">User ID: #1234 <span class="text-danger ml-2">Pending</span></p>
-													</div>
-													<span class="mr-auto wd-45p fs-16 mt-2">
-														<div id="spark2" class="wd-100p"></div>
-													</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="list-group-item list-group-item-action" href="#">
-										<div class="media mt-0">
-											<img class="avatar-lg rounded-circle ml-3 my-auto" src="{{URL::asset('assets/img/faces/17.jpg')}}" alt="Image description">
-											<div class="media-body">
-												<div class="d-flex align-items-center">
-													<div class="mt-1">
-														<h5 class="mb-1 tx-15">Gabe Lackmen</h5>
-														<p class="mb-0 tx-13 text-muted">User ID: #1234<span class="text-danger ml-2">Pending</span></p>
-													</div>
-													<span class="mr-auto wd-45p fs-16 mt-2">
-														<div id="spark3" class="wd-100p"></div>
-													</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="list-group-item list-group-item-action" href="#">
-										<div class="media mt-0">
-											<img class="avatar-lg rounded-circle ml-3 my-auto" src="{{URL::asset('assets/img/faces/15.jpg')}}" alt="Image description">
-											<div class="media-body">
-												<div class="d-flex align-items-center">
-													<div class="mt-1">
-														<h5 class="mb-1 tx-15">Manuel Labor</h5>
-														<p class="mb-0 tx-13 text-muted">User ID: #1234<span class="text-success ml-2">Paid</span></p>
-													</div>
-													<span class="mr-auto wd-45p fs-16 mt-2">
-														<div id="spark4" class="wd-100p"></div>
-													</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="list-group-item list-group-item-action br-br-7 br-bl-7" href="#">
-										<div class="media mt-0">
-											<img class="avatar-lg rounded-circle ml-3 my-auto" src="{{URL::asset('assets/img/faces/6.jpg')}}" alt="Image description">
-											<div class="media-body">
-												<div class="d-flex align-items-center">
-													<div class="mt-1">
-														<h5 class="mb-1 tx-15">Sharon Needles</h5>
-														<p class="b-0 tx-13 text-muted mb-0">User ID: #1234<span class="text-success ml-2">Paid</span></p>
-													</div>
-													<span class="mr-auto wd-45p fs-16 mt-2">
-														<div id="spark5" class="wd-100p"></div>
-													</span>
-												</div>
-											</div>
-										</div>
-									</div>
+									@endforeach
+
 								</div>
 							</div>
 						</div>

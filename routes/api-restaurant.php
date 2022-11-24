@@ -55,6 +55,9 @@ Route::prefix('/restaurant')->group(function(){
         Route::Post('/read-notification',[OrderController::class,'readNotification']);
         Route::get('/notifications',[OrderController::class,'restaurantNotifications']);
 
+
+        Route::get('/commissions',[OrderController::class,'commissions']);
+
     });
 
 });

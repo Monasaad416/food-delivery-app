@@ -10,6 +10,7 @@ use App\Models\Setting;
 use App\Traits\FcmTrait;
 use App\Models\Restaurant;
 use App\Models\Notification;
+use App\Models\PaidCommession;
 use Illuminate\Http\Request;
 use App\Traits\ApiResponseTrait;
 use App\Http\Controllers\Controller;
@@ -432,6 +433,25 @@ class OrderController extends Controller
         return $this->apiResponse('200','Get notifications successfully',[
             'notifications' => $notifications,
         ]);
+    }
+
+
+    public function commissions(Request $request)
+    {
+
+        $totalOrders = Order::where('restaurant_id',$request->user()->id)->sum('total_price');
+        $totalCommessions = ($totalOrders * 10 )/ 100;
+
+        $totalPayments = PaidCommession::where('restaurant_id',$request->user()->id)->sum('paid');
+        $remainning= $totalCommessions - $totalPayments;
+
+        return $this->apiResponse('200','Get commissions successfully',
+        [
+            'totalOrders' => $totalOrders,
+            'totalCommessions' =>$totalCommessions,
+             'totalPayments' => $totalPayments,
+             'remainning' => $remainning,
+         ]);
     }
 
 
