@@ -11,8 +11,7 @@ class Restaurant extends Authenticatable
 {
     use HasApiTokens;
 
-    const OPENED = 1;
-    const CLOSED = 2;
+
 
     protected $table = 'restaurants';
     public $timestamps = true;
@@ -30,7 +29,7 @@ class Restaurant extends Authenticatable
 
     public function commission()
     {
-        return $this->hasMany('App\Models\PaidCommession');
+        return $this->hasMany('App\Models\PaidCommission');
     }
 
     public function offers()
@@ -60,7 +59,7 @@ class Restaurant extends Authenticatable
 
     public function notificationTokens()
     {
-        return $this->morphMany('App\Models\NotificationToken', 'notification_tokenable');
+        return $this->morphMany('App\Models\NotificationToken', 'tokenable');
     }
 
 }

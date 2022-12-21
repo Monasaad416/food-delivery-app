@@ -21,7 +21,7 @@ class CreateRestaurantsTable extends Migration {
 			$table->string('phone');
 			$table->string('image');
             $table->mediumInteger('pin_code')->nullable();
-			$table->boolean('status')->nullable()->default(Restaurant::OPENED);
+			$table->boolean('availability')->nullable()->default(1);
 			$table->timestamps();
 		});
 	}

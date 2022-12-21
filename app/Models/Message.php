@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Message extends Model 
+class Message extends Model
 {
 
     protected $table = 'messages';
@@ -21,10 +21,10 @@ class Message extends Model
     {
         return match($this->type)
         {
-            self::COMPLAIN => 'complain',
-            self::SUGGESTION => 'suggestion',
-            self::INQUIRY => 'inquiry',
-            
+            self::COMPLAIN => 'شكوي',
+            self::SUGGESTION => 'إقتراح',
+            self::INQUIRY => 'إستعلام',
+
             default => 'unknown',
         };
     }

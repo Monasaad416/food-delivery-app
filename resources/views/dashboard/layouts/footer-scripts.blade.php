@@ -31,3 +31,22 @@
 <!-- custom js -->
 <script src="{{URL::asset('admin-dashboard/assets/js/custom.js')}}"></script><!-- Left-menu js-->
 <script src="{{URL::asset('admin-dashboard/assets/plugins/side-menu/sidemenu.js')}}"></script>
+
+<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.3/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.3/js/buttons.bootstrap4.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.print.min.js"></script>
+
+<script>
+$(document).ready(function () {
+    $('#example').DataTable();
+     $(".owl-carousel").owlCarousel();
+});
+</script>
+
+
+
+
+
+@stack('scripts')

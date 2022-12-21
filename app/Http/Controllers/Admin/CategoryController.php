@@ -1,86 +1,93 @@
-<?php 
+<?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use DataTables;
+use App\Models\Category;
 
-class CategoryController extends Controller 
+class CategoryController extends Controller
 {
+    public function index()
+    {
+        return view('dashboard.pages.categories.index');
+    }
 
-  /**
-   * Display a listing of the resource.
-   *
-   * @return Response
-   */
-  public function index()
-  {
-    
-  }
+    public function categoriesList(Request $request)
+    {
+        $data = Category::latest()->get();
+        $user = auth()->user();
+        return DataTables::of($data)
+            ->addIndexColumn()
+                ->addColumn('name', function($row){
+                return $row->name;
+            })
+            ->addColumn('edit', function($row) use($user){
+                if($user->can('تعديل-التصنيف')){
+                    $edit = '<a  href="'. Route('categories.edit',$row->id) .'"  class="btn btn-success btn-sm"><i class="typcn typcn-edit"></i></a>';
+                    return $edit;
+                }
+                return '<p class="text-muted">غير مسموح</p>';
+            })
+            ->addColumn('delete', function($row) use($user){
+                if($user->can('حذف-التصنيف')){
+                    $delete ='<button type="button" class="btn btn-danger btn-sm" id="delete_btn" data-id = "'. $row->id .'" data-name = "'. $row->name .'" data-toggle="modal" data-target="#delete_category_modal">
+                                <i class="typcn typcn-document-delete"></i>
+                            </button>';      
+                    return $delete;
+                }
+                return '<p class="text-muted">غير مسموح</p>';    
+            })
+            ->rawColumns(['edit','delete'])
+            ->make(true);
+    }
 
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return Response
-   */
-  public function create()
-  {
-    
-  }
+    public function create()
+    {
+        return view('dashboard.pages.categories.create');
+    }
 
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @return Response
-   */
-  public function store(Request $request)
-  {
-    
-  }
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+        Category::create([
+            'name' => $request->name,
+        ]);
 
-  /**
-   * Display the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function show($id)
-  {
-    
-  }
+        $request->session()->flash("success");
+        return redirect()->route('categories.index');
+    }
 
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function edit($id)
-  {
-    
-  }
+   public function edit($id)
+    {
+        $category = category::find($id);
+        return view('dashboard.pages.categories.edit',['category'=>$category]);
+    }
 
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function update($id)
-  {
-    
-  }
 
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function destroy($id)
-  {
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'nullable|string|max:255',
+        ]);
+
+        $category = category::find($id);
     
-  }
-  
+        $category->update([
+            'name' => $request->name,
+        ]);
+
+        $request->session()->flash("update");
+        return redirect()->route('categories.index');
+    }
+
+    public function delete(Request $request)
+    {
+        $category = category::findOrFail($request->id)->delete();
+        $request->session()->flash("delete");
+        return redirect()->route('categories.index');
+    }
 }
-
-?>

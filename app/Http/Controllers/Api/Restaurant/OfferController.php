@@ -28,30 +28,33 @@ class OfferController extends Controller
                     $validator->errors()
                 ],422);
             }
+            if($request->restaurant_id == $request->user()->id){
+                $path = Storage::putFile('offers', $request->file('image'));
+                $offer = Offer::create([
+                    'name' => $request->name,
+                    'description' => $request->description,
+                    'image' => $path,
+                    'from_date' => $request->from_date,
+                    'to_date' => $request->to_date,
+                    'restaurant_id' => $request->restaurant_id,
+                ]);
+                $offer->update([
+                    'image' => $path,
+                ]);
 
-        $path = Storage::putFile('offers', $request->file('image'));
-        $offer = Offer::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'image' => $path,
-            'from_date' => $request->from_date,
-            'to_date' => $request->to_date,
-            'restaurant_id' => $request->restaurant_id,
-        ]);
-        $offer->update([
-            'image' => $path,
-        ]);
 
-
-        return $this->apiResponse('200','Offer added successfully',[
-            'offer' => $offer,
-        ]);
+                return $this->apiResponse('200','Offer added successfully',[
+                    'offer' => $offer,
+                ]);
+            } else {
+                return $this->apiResponse('0','الرقم التعريفي للمطعم غير صحيح');
+            }
     }
 
-    public function editOffer(Request $request,$restaurantId,$offerId)
+    public function editOffer(Request $request,$offerId)
     {
         $offer = Offer::find($offerId);
-        if($offer->resrtaurant_id == $restaurantId){
+        if($offer->resrtaurant_id == $request->user()->id){
             
         $path = $offer->image;
 
@@ -90,10 +93,10 @@ class OfferController extends Controller
     }
 
 
-    public function deleteOffer($restaurantId,$offerId)
+    public function deleteOffer($offerId)
     {
         $offer = Offer::find($offerId);
-        if($offer->restaurant_id == $restaurantId){
+        if($offer->restaurant_id == $request->user()->id){
             $path = $offer->image;
             $offer->delete();
             Storage::delete($path);

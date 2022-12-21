@@ -1,86 +1,31 @@
-<?php 
+<?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
-class SettingController extends Controller 
+use App\Models\Setting;
+class SettingController extends Controller
 {
+    public function edit()
+    {
+        $settings = Setting::firstOrCreate();
+        return view('dashboard.pages.settings.edit',['settings'=>$settings]);
+    }
+    public function update(Request $request)
+    {
+        $request->validate([
+            'email'=> 'nullable|email',
+            'about_us'=> 'nullable|string',
+            'app_commissions'=> 'nullable|numeric',
+            'commission_text'=> 'nullable|string',
+            ]);
 
-  /**
-   * Display a listing of the resource.
-   *
-   * @return Response
-   */
-  public function index()
-  {
-    
-  }
+        $settings = Setting::first();
+        $settings->update($request->all());
+        $settings->save();
 
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return Response
-   */
-  public function create()
-  {
-    
-  }
-
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @return Response
-   */
-  public function store(Request $request)
-  {
-    
-  }
-
-  /**
-   * Display the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function show($id)
-  {
-    
-  }
-
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function edit($id)
-  {
-    
-  }
-
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function update($id)
-  {
-    
-  }
-
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function destroy($id)
-  {
-    
-  }
-  
+        $request->session()->flash("update");
+       return redirect()->route('settings.edit');
+    }
 }
-
-?>

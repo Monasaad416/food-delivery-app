@@ -58,7 +58,7 @@ class AuthController extends Controller
 
         $token = $restaurant->createToken('api_token');
 
-        return $this->apiResponse('200','Restaurant Added Successfully',[
+        return $this->apiResponse('200','تم إضافة المطعم بنجاح',[
             'api_token' => $token->plainTextToken,
             'restaurant' => $restaurant,
         ]);
@@ -84,7 +84,7 @@ class AuthController extends Controller
             if($correctPassword){
                 $token = $restaurant->createToken('api_token');
 
-                return $this->apiResponse('200','restaurant logged Successfully',[
+                return $this->apiResponse('200','تم تسجيل دخول المطعم بنجاح',[
                     'api_token' => $token->plainTextToken,
                     'restaurant' => $restaurant,
                 ]);
@@ -101,7 +101,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
-        return $this->apiResponse('200','restaurant logged out successfully');
+        return $this->apiResponse('200','تم تسجيل خروج المطعم');
 
 
 
@@ -135,10 +135,10 @@ class AuthController extends Controller
 
 
             } else {
-                return $this->apiResponse('0','Try again');
+                return $this->apiResponse('0','حاول مرة أخري');
             }
         } else {
-            return $this->apiResponse('0','There is no account related to this email');
+            return $this->apiResponse('0','لايوجد حساب مرتبط بهذا البريد الإلكتروني');
         }
     }
 
@@ -164,7 +164,7 @@ class AuthController extends Controller
             ]);
 
             if($updatedrestaurant !== null) {
-                return $this->apiResponse('200','Password updated successfully');
+                return $this->apiResponse('200','تم تحديث كلمة السر بنجاح');
             } else {
                 return $this->apiResponse('0','Try again');
             }
@@ -176,7 +176,7 @@ class AuthController extends Controller
     public function profile(Request $request)
     {
         $loggedRestaurant = $request->user();
-        return $this->apiResponse('200','Display profile successfully',['profile' => [
+        return $this->apiResponse('200','تم عرض بيانات الحساب الشخصي بنجاح',['profile' => [
             [
                 'name' => $loggedRestaurant->name,
                 'email' => $loggedRestaurant->email,
@@ -224,7 +224,7 @@ class AuthController extends Controller
             $path = Storage::putFile('restaurants', $request->file('image'));
             $loggedRestaurant->update(['image'=>$path]);
         }
-        return $this->apiResponse('200','Profile updated successfully',['restaurant' => $request->user()]);
+        return $this->apiResponse('200','تم تحديث بيانات الحساب الشخصي بنجاح',['restaurant' => $request->user()]);
     }
 
 
@@ -246,7 +246,7 @@ class AuthController extends Controller
         $request->user()->notification_tokens()->create(
             $request->all(),
         );
-        return $this->apiResponse('200','Notification token created successfully');
+        return $this->apiResponse('200','تم إنشاء توكين للجهاز بنجاح');
 
 
     }

@@ -2,376 +2,301 @@
 @section('css')
 @endsection
 @section('page-header')
-				<!-- breadcrumb -->
-				<div class="breadcrumb-header justify-content-between">
-					<div class="left-content">
-						<div>
-						  <h2 class="main-content-title tx-24 mg-b-1 mg-b-lg-1">Hi, welcome back!</h2>
-						  <p class="mg-b-0">Sales monitoring dashboard template.</p>
-						</div>
-					</div>
-					<div class="main-dashboard-header-right">
-						<div>
-							<label class="tx-13">Customer Ratings</label>
-							<div class="main-star">
-								<i class="typcn typcn-star active"></i> <i class="typcn typcn-star active"></i> <i class="typcn typcn-star active"></i> <i class="typcn typcn-star active"></i> <i class="typcn typcn-star"></i> <span>(14,873)</span>
-							</div>
-						</div>
-						<div>
-							<label class="tx-13">Online Sales</label>
-							<h5>563,275</h5>
-						</div>
-						<div>
-							<label class="tx-13">Offline Sales</label>
-							<h5>783,675</h5>
-						</div>
-					</div>
-				</div>
-				<!-- /breadcrumb -->
+    <!-- breadcrumb -->
+    <div class="breadcrumb-header justify-content-between">
+        <div class="left-content">
+            <div>
+                <h2 class="main-content-title tx-24 mg-b-1 mg-b-lg-1"> اهلا {{auth()->user()->name}}</h2>
+                <p class="mg-b-0">لوحة تحكم الموقع .</p>
+            </div>
+        </div>
+        <div class="main-dashboard-header-right">
+            <div>
+                <label class="tx-13">إجمالي الطلبات المستلمة</label>
+                <h5>{{number_format($orders->where('status',4)->sum('total_price'))}} جنية</h5>
+            </div>
+            <div>
+                <label class="tx-13">إجمالي الطلبات المرفوضة</label>
+                <h5>{{number_format($orders->where('status',5)->sum('total_price'))}} جنية</h5>
+            </div>
+            <div>
+                <label class="tx-13">إجمالي عمولات الموقع</label>
+                <h5>{{number_format($commissions->sum('paid'))}} جنية</h5>
+            </div>
+        </div>
+    </div>
+    <!-- /breadcrumb -->
 @endsection
 @section('content')
-				<!-- row -->
-				<div class="row row-sm">
-					<div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
-						<div class="card overflow-hidden sales-card bg-primary-gradient">
-							<div class="pl-3 pt-3 pr-3 pb-2 pt-0">
-								<div class="">
-									<h6 class="mb-3 tx-12 text-white">طلبات اليوم</h6>
-								</div>
-								<div class="pb-0 mt-0">
-									<div class="d-flex">
-										<div class="">
-											<h4 class="tx-20 font-weight-bold mb-1 text-white">{{$orders->where('created_at',date('Y-m-d H:i:s'))->sum('total_price')}}جنية</h4>
-											<p class="mb-0 tx-12 text-white op-7">المقارنة بمبيعات اليوم السابق</p>
-										</div>
-										<span class="float-right my-auto mr-auto">
-											
-                                            @if($orders->where('created_at',Carbon\Carbon::yesterday())->sum('total_price') !== 0 )
-                                                <i class="fas fa-arrow-circle-up text-white"></i>
-											    <span class="text-white op-7">{{$orders->where('created_at',date('Y-m-d H:i:s'))->sum('total_price') / $orders->where('created_at',Carbon\Carbon::yesterday())->sum('total_price') * 100}}</span>
-                                            @endif
-                                        </span>
-									</div>
-								</div>
-							</div>
-						</div>
+	<!-- row -->
+    @include("dashboard.inc.message")
+
+	<div class="row row-sm">
+		<div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
+			<div class="card overflow-hidden sales-card bg-primary-gradient">
+				<div class="pl-3 pt-3 pr-3 pb-2 pt-0">
+					<div class="">
+						<h6 class="mb-3 tx-12 text-white">طلبات اليوم</h6>
 					</div>
-                    <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
-						<div class="card overflow-hidden sales-card bg-danger-gradient">
-							<div class="pl-3 pt-3 pr-3 pb-2 pt-0">
-								<div class="">
-									<h6 class="mb-3 tx-12 text-white">عدد المطاعم</h6>
-								</div>
-								<div class="pb-0 mt-0">
-									<div class="d-flex">
-										<div class="">
-											<h4 class="tx-20 font-weight-bold mb-1 text-white">{{$restaurants->count()}}</h4>
-											<p class="mb-0 tx-12 text-white op-7">Compared to last week</p>
-										</div>
-										<span class="float-right my-auto mr-auto">
-											<i class="fas fa-arrow-circle-down text-white"></i>
-											<span class="text-white op-7"> -23.09%</span>
-										</span>
-									</div>
-								</div>
+					<div class="pb-0 mt-0">
+						<div class="d-flex">
+							<div class="">
+								<h4 class="tx-20 font-weight-bold mb-1 text-white">{{$orders->where('created_at',date('Y-m-d H:i:s'))->sum('total_price')}} جنية</h4>
+								{{-- <p class="mb-0 tx-12 text-white op-7">المقارنة بمبيعات اليوم السابق</p> --}}
 							</div>
-						</div>
-					</div>
-					<div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
-						<div class="card overflow-hidden sales-card bg-warning-gradient">
-							<div class="pl-3 pt-3 pr-3 pb-2 pt-0">
-								<div class="">
-									<h6 class="mb-3 tx-12 text-white">عدد العملاء</h6>
-								</div>
-								<div class="pb-0 mt-0">
-									<div class="d-flex">
-										<div class="">
-											<h4 class="tx-20 font-weight-bold mb-1 text-white">$4,820.50</h4>
-											<p class="mb-0 tx-12 text-white op-7">Compared to last week</p>
-										</div>
-										<span class="float-right my-auto mr-auto">
-											<i class="fas fa-arrow-circle-down text-white"></i>
-											<span class="text-white op-7"> -152.3</span>
-										</span>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-                    <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
-						<div class="card overflow-hidden sales-card bg-success-gradient">
-							<div class="pl-3 pt-3 pr-3 pb-2 pt-0">
-								<div class="">
-									<h6 class="mb-3 tx-12 text-white">عدد العروض</h6>
-								</div>
-								<div class="pb-0 mt-0">
-									<div class="d-flex">
-										<div class="">
-											<h4 class="tx-20 font-weight-bold mb-1 text-white">$7,125.70</h4>
-											<p class="mb-0 tx-12 text-white op-7">Compared to last week</p>
-										</div>
-										<span class="float-right my-auto mr-auto">
-											<i class="fas fa-arrow-circle-up text-white"></i>
-											<span class="text-white op-7"> 52.09%</span>
-										</span>
-									</div>
-								</div>
-							</div>
-							<span id="compositeline3" class="pt-1"></span>
+							{{-- <span class="float-right my-auto mr-auto">
+
+								@if($orders->where('created_at',Carbon\Carbon::yesterday())->sum('total_price') !== 0 )
+									<i class="fas fa-arrow-circle-up text-white"></i>
+									<span class="text-white op-7">{{$orders->where('created_at',date('Y-m-d H:i:s'))->sum('total_price') / $orders->where('created_at',Carbon\Carbon::yesterday())->sum('total_price') * 100}}</span>
+                                @else
+                                <span>صفر</span>
+								@endif
+							</span> --}}
 						</div>
 					</div>
 				</div>
-				<!-- row closed -->
-
-				<!-- row opened -->
-				<div class="row ">
-					<div class="w-100">
-						<div class="card">
-							<div class="card-header bg-transparent pd-b-0 pd-t-20 bd-b-0">
-								<div class="d-flex justify-content-between">
-									<h4 class="card-title mb-0">حالة الطلبات</h4>
-									<i class="mdi mdi-dots-horizontal text-gray"></i>
-								</div>
-								<p class="tx-12 text-muted mb-0">تتبع حالة الطلبات</p>
-							</div>
-							<div class="card-body">
-								<div class="total-revenue">
-									<div>
-									  <h4>{{$orders->where('status',1)->sum('total_price')}}جنيه</h4>
-									  <label><span class="bg-secondary"></span>تحت الموافقة</label>
-									</div>
-									<div>
-									  <h4>{{$orders->where('status',2)->sum('total_price')}}جنيه</h4>
-									  <label><span class="bg-primary"></span>تمت الموافقة</label>
-									</div>
-									<div>
-									  <h4>{{$orders->where('status',3)->sum('total_price')}}جنيه</h4>
-									  <label><span class="bg-danger"></span>مرفوضة</label>
-									</div>
-									<div>
-										<h4>{{$orders->where('status',4)->sum('total_price')}}جنيه</h4>
-										<label><span class="bg-success"></span>مستلمة</label>
-									  </div>
-									  <div>
-										<h4>{{$orders->where('status',5)->sum('total_price')}}جنيه</h4>
-										<label><span class="bg-warning"></span>مرتجعه</label>
-									  </div>
-								  </div>
-								<div id="bar" class="sales-bar mt-4"></div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- row closed -->
-
-				<!-- row opened -->
-				<div class="row row-sm">
-					<div class="col-xl-4 col-md-12 col-lg-12">
-						<div class="card">
-							<div class="card-header pb-1">
-								<h3 class="card-title mb-2">متابعة العمولات</h3>
-								<p class="tx-12 mb-0 text-muted"> مطاعم قامت بدفع العمولة خلال إسبوع سابق </p>
-							</div>
-							<div class="card-body p-0 customers mt-1">
-								<div class="list-group list-lg-group list-group-flush">
-									@foreach($clients as $client)
-										<div class="list-group-item list-group-item-action" href="#">
-											<div class="media mt-0">
-												<img class="avatar-lg rounded-circle ml-3 my-auto" src="{{URL::asset('adminassets/img/faces/3.jpg')}}" alt="Image description">
-												<div class="media-body">
-													<div class="d-flex align-items-center">
-														<div class="mt-0">
-															<h5 class="mb-1 tx-15">{{$client->name}}</h5>
-															<p class="mb-0 tx-13 text-muted">User ID: #{{$client->id}}<span class="text-success ml-2">Paid</span></p>
-														</div>
-														<span class="mr-auto wd-45p fs-16 mt-2">
-															<div id="spark1" class="wd-100p"></div>
-														</span>
-													</div>
-												</div>
-											</div>
-										</div>
-									@endforeach
-
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-4 col-md-12 col-lg-6">
-						<div class="card">
-							<div class="card-header pb-1">
-								<h3 class="card-title mb-2">Sales Activity</h3>
-								<p class="tx-12 mb-0 text-muted">Sales activities are the tactics that salespeople use to achieve their goals and objective</p>
-							</div>
-							<div class="product-timeline card-body pt-2 mt-1">
-								<ul class="timeline-1 mb-0">
-									<li class="mt-0"> <i class="ti-pie-chart bg-primary-gradient text-white product-icon"></i> <span class="font-weight-semibold mb-4 tx-14 ">Total Products</span> <a href="#" class="float-left tx-11 text-muted">3 days ago</a>
-										<p class="mb-0 text-muted tx-12">1.3k New Products</p>
-									</li>
-									<li class="mt-0"> <i class="mdi mdi-cart-outline bg-danger-gradient text-white product-icon"></i> <span class="font-weight-semibold mb-4 tx-14 ">Total Sales</span> <a href="#" class="float-left tx-11 text-muted">35 mins ago</a>
-										<p class="mb-0 text-muted tx-12">1k New Sales</p>
-									</li>
-									<li class="mt-0"> <i class="ti-bar-chart-alt bg-success-gradient text-white product-icon"></i> <span class="font-weight-semibold mb-4 tx-14 ">Toatal Revenue</span> <a href="#" class="float-left tx-11 text-muted">50 mins ago</a>
-										<p class="mb-0 text-muted tx-12">23.5K New Revenue</p>
-									</li>
-									<li class="mt-0"> <i class="ti-wallet bg-warning-gradient text-white product-icon"></i> <span class="font-weight-semibold mb-4 tx-14 ">Toatal Profit</span> <a href="#" class="float-left tx-11 text-muted">1 hour ago</a>
-										<p class="mb-0 text-muted tx-12">3k New profit</p>
-									</li>
-									<li class="mt-0"> <i class="si si-eye bg-purple-gradient text-white product-icon"></i> <span class="font-weight-semibold mb-4 tx-14 ">Customer Visits</span> <a href="#" class="float-left tx-11 text-muted">1 day ago</a>
-										<p class="mb-0 text-muted tx-12">15% increased</p>
-									</li>
-									<li class="mt-0 mb-0"> <i class="icon-note icons bg-primary-gradient text-white product-icon"></i> <span class="font-weight-semibold mb-4 tx-14 ">Customer Reviews</span> <a href="#" class="float-left tx-11 text-muted">1 day ago</a>
-										<p class="mb-0 text-muted tx-12">1.5k reviews</p>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-4 col-md-12 col-lg-6">
-						<div class="card">
-							<div class="card-header pb-0">
-								<h3 class="card-title mb-2">Recent Orders</h3>
-								<p class="tx-12 mb-0 text-muted">An order is an investor's instructions to a broker or brokerage firm to purchase or sell</p>
-							</div>
-							<div class="card-body sales-info ot-0 pt-0 pb-0">
-								<div id="chart" class="ht-150"></div>
-								<div class="row sales-infomation pb-0 mb-0 mx-auto wd-100p">
-									<div class="col-md-6 col">
-										<p class="mb-0 d-flex"><span class="legend bg-primary brround"></span>Delivered</p>
-										<h3 class="mb-1">5238</h3>
-										<div class="d-flex">
-											<p class="text-muted ">Last 6 months</p>
-										</div>
-									</div>
-									<div class="col-md-6 col">
-										<p class="mb-0 d-flex"><span class="legend bg-info brround"></span>Cancelled</p>
-											<h3 class="mb-1">3467</h3>
-										<div class="d-flex">
-											<p class="text-muted">Last 6 months</p>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="card ">
-							<div class="card-body">
-								<div class="row">
-									<div class="col-md-6">
-										<div class="d-flex align-items-center pb-2">
-											<p class="mb-0">Total Sales</p>
-										</div>
-										<h4 class="font-weight-bold mb-2">$7,590</h4>
-										<div class="progress progress-style progress-sm">
-											<div class="progress-bar bg-primary-gradient wd-80p" role="progressbar" aria-valuenow="78" aria-valuemin="0" aria-valuemax="78"></div>
-										</div>
-									</div>
-									<div class="col-md-6 mt-4 mt-md-0">
-										<div class="d-flex align-items-center pb-2">
-											<p class="mb-0">Active Users</p>
-										</div>
-										<h4 class="font-weight-bold mb-2">$5,460</h4>
-										<div class="progress progress-style progress-sm">
-											<div class="progress-bar bg-danger-gradient wd-75" role="progressbar"  aria-valuenow="45" aria-valuemin="0" aria-valuemax="45"></div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- row close -->
-
-				<!-- row opened -->
-				<div class="row row-sm row-deck">
-					<div class="col-md-12 col-lg-4 col-xl-4">
-						<div class="card card-dashboard-eight pb-2">
-							<h6 class="card-title">Your Top Countries</h6><span class="d-block mg-b-10 text-muted tx-12">Sales performance revenue based by country</span>
-							<div class="list-group">
-								<div class="list-group-item border-top-0">
-									<i class="flag-icon flag-icon-us flag-icon-squared"></i>
-									<p>United States</p><span>$1,671.10</span>
-								</div>
-								<div class="list-group-item">
-									<i class="flag-icon flag-icon-nl flag-icon-squared"></i>
-									<p>Netherlands</p><span>$1,064.75</span>
-								</div>
-								<div class="list-group-item">
-									<i class="flag-icon flag-icon-gb flag-icon-squared"></i>
-									<p>United Kingdom</p><span>$1,055.98</span>
-								</div>
-								<div class="list-group-item">
-									<i class="flag-icon flag-icon-ca flag-icon-squared"></i>
-									<p>Canada</p><span>$1,045.49</span>
-								</div>
-								<div class="list-group-item">
-									<i class="flag-icon flag-icon-in flag-icon-squared"></i>
-									<p>India</p><span>$1,930.12</span>
-								</div>
-								<div class="list-group-item border-bottom-0 mb-0">
-									<i class="flag-icon flag-icon-au flag-icon-squared"></i>
-									<p>Australia</p><span>$1,042.00</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-12 col-lg-8 col-xl-8">
-						<div class="card card-table-two">
-							<div class="d-flex justify-content-between">
-								<h4 class="card-title mb-1">Your Most Recent Earnings</h4>
-								<i class="mdi mdi-dots-horizontal text-gray"></i>
-							</div>
-							<span class="tx-12 tx-muted mb-3 ">This is your most recent earnings for today's date.</span>
-							<div class="table-responsive country-table">
-								<table class="table table-striped table-bordered mb-0 text-sm-nowrap text-lg-nowrap text-xl-nowrap">
-									<thead>
-										<tr>
-											<th class="wd-lg-25p">Date</th>
-											<th class="wd-lg-25p tx-right">Sales Count</th>
-											<th class="wd-lg-25p tx-right">Earnings</th>
-											<th class="wd-lg-25p tx-right">Tax Witheld</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>05 Dec 2019</td>
-											<td class="tx-right tx-medium tx-inverse">34</td>
-											<td class="tx-right tx-medium tx-inverse">$658.20</td>
-											<td class="tx-right tx-medium tx-danger">-$45.10</td>
-										</tr>
-										<tr>
-											<td>06 Dec 2019</td>
-											<td class="tx-right tx-medium tx-inverse">26</td>
-											<td class="tx-right tx-medium tx-inverse">$453.25</td>
-											<td class="tx-right tx-medium tx-danger">-$15.02</td>
-										</tr>
-										<tr>
-											<td>07 Dec 2019</td>
-											<td class="tx-right tx-medium tx-inverse">34</td>
-											<td class="tx-right tx-medium tx-inverse">$653.12</td>
-											<td class="tx-right tx-medium tx-danger">-$13.45</td>
-										</tr>
-										<tr>
-											<td>08 Dec 2019</td>
-											<td class="tx-right tx-medium tx-inverse">45</td>
-											<td class="tx-right tx-medium tx-inverse">$546.47</td>
-											<td class="tx-right tx-medium tx-danger">-$24.22</td>
-										</tr>
-										<tr>
-											<td>09 Dec 2019</td>
-											<td class="tx-right tx-medium tx-inverse">31</td>
-											<td class="tx-right tx-medium tx-inverse">$425.72</td>
-											<td class="tx-right tx-medium tx-danger">-$25.01</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- /row -->
 			</div>
 		</div>
-		<!-- Container closed -->
+		<div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
+			<div class="card overflow-hidden sales-card bg-danger-gradient">
+				<div class="pl-3 pt-3 pr-3 pb-2 pt-0">
+					<div class="">
+						<h6 class="mb-3 tx-12 text-white">عدد المطاعم</h6>
+					</div>
+					<div class="pb-0 mt-0">
+						<div class="d-flex">
+							<div class="">
+								<h4 class="tx-20 font-weight-bold mb-1 text-white">{{$restaurants->count()}} مطعم</h4>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
+			<div class="card overflow-hidden sales-card bg-warning-gradient">
+				<div class="pl-3 pt-3 pr-3 pb-2 pt-0">
+					<div class="">
+						<h6 class="mb-3 tx-12 text-white">عدد العملاء</h6>
+					</div>
+					<div class="pb-0 mt-0">
+						<div class="d-flex">
+							<div class="">
+								<h4 class="tx-20 font-weight-bold mb-1 text-white">{{$clients->count()}}  عميل</h4>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
+			<div class="card overflow-hidden sales-card bg-success-gradient">
+				<div class="pl-3 pt-3 pr-3 pb-2 pt-0">
+					<div class="">
+						<h6 class="mb-3 tx-12 text-white">عمولات اليوم</h6>
+					</div>
+					<div class="pb-0 mt-0">
+						<div class="d-flex">
+							<div class="">
+								<h4 class="tx-20 font-weight-bold mb-1 text-white">{{$commissions->where('payment_date',date('Y-m-d H:i:s'))->sum('total_price')}}  جنية</h4>
+							</div>
+							<span class="float-right my-auto mr-auto">
+
+								@if($commissions->where('payment_date',Carbon\Carbon::yesterday())->sum('total_price') !== 0 )
+									<i class="fas fa-arrow-circle-up text-white"></i>
+									<span class="text-white op-7">{{$orders->where('created_at',date('Y-m-d H:i:s'))->sum('total_price') / $orders->where('created_at',Carbon\Carbon::yesterday())->sum('total_price') * 100}}</span>
+								@endif
+							</span>
+						</div>
+					</div>
+				</div>
+				<span id="compositeline3" class="pt-1"></span>
+			</div>
+		</div>
+	</div>
+
+	<div class="row ">
+		<div class="w-100">
+			<div class="card">
+				<div class="card-header bg-transparent pd-b-0 pd-t-20 bd-b-0">
+					<div class="d-flex justify-content-between">
+						<h4 class="card-title mb-0">إجمالي الطلبات</h4>
+						<i class="mdi mdi-dots-horizontal text-gray"></i>
+					</div>
+					<p class="tx-12 text-muted mb-0">وفقا لحالة الطلب</p>
+				</div>
+				<div class="card-body">
+					<div class="total-revenue">
+						<div>
+							<h4>{{$orders->where('status',1)->sum('total_price')}}جنيه</h4>
+							<label><span class="bg-secondary"></span>تحت الموافقة</label>
+						</div>
+						<div>
+							<h4>{{$orders->where('status',2)->sum('total_price')}}جنيه</h4>
+							<label><span class="bg-primary"></span>تمت الموافقة</label>
+						</div>
+						<div>
+							<h4>{{$orders->where('status',3)->sum('total_price')}}جنيه</h4>
+							<label><span class="bg-danger"></span>مرفوضة</label>
+						</div>
+						<div>
+							<h4>{{$orders->where('status',4)->sum('total_price')}}جنيه</h4>
+							<label><span class="bg-success"></span>مستلمة</label>
+							</div>
+							<div>
+							<h4>{{$orders->where('status',5)->sum('total_price')}}جنيه</h4>
+							<label><span class="bg-warning"></span>مرتجعه</label>
+							</div>
+						</div>
+					<div id="bar" class="sales-bar mt-4"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row row-sm">
+		<div class="col-xl-4 col-md-12 col-lg-12">
+			<div class="card">
+				<div class="card-header pb-1">
+					<h3 class="card-title mb-2">عمولة المطاعم</h3>
+					<p class="tx-12 mb-0 text-muted">مطاعم قامت بتسديد العمولة حديثا</p>
+				</div>
+				@php
+					$latestCommissions = App\Models\PaidCommission::latest()->take(4)->get();
+				@endphp
+				<div class="card-body p-0 customers mt-1">
+					<div class="list-group list-lg-group list-group-flush">
+						@foreach($latestCommissions as $commission)
+
+							<div class="list-group-item list-group-item-action br-br-7 br-bl-7" href="#">
+								<div class="media mt-0">
+									<img class="avatar-lg rounded-circle ml-3 my-auto" src="{{url("uploads") ."/". $commission->restaurant->image}}" alt="{{$commission->restaurant->name}}">
+									<div class="media-body">
+										<div class="d-flex align-items-center">
+											<div class="mt-1">
+												<h5 class="mb-1 tx-15">{{$commission->restaurant->name}}</h5>
+												<p class="b-0 tx-13 text-muted mb-0"><span class="text-success ml-2"> المدفوع:</span>{{$commission->paid}} جنيه</p>
+											</div>
+											<span class="mr-auto wd-45p fs-16 mt-2">
+												<div id="spark5" class="wd-100p"></div>
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						@endforeach
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xl-4 col-md-12 col-lg-6">
+			<div class="card">
+				<div class="card-header pb-1">
+					<h3 class="card-title mb-2">حركة المبيعات</h3>
+					<p class="tx-12 mb-0 text-muted">إجمالي المبيعات والأرباح وعمولة الموقع</p>
+				</div>
+				<div class="product-timeline card-body pt-2 mt-1">
+					<ul class="timeline-1 mb-0">
+						<li class="mt-0"> <i class="mdi mdi-cart-outline bg-danger-gradient text-white product-icon"></i> <span class="font-weight-semibold mb-4 tx-14 ">أجمالي المبيعات : </span> <a href="#" class="float-left tx-11 text-muted">{{Carbon\Carbon::parse(App\Models\Order::latest()->first()->created_at)->format('d M ,Y')}} اخر تحديث</a>
+							<p class="mb-0 text-muted tx-12">{{$orders->sum('total_price')}} جنية</p>
+						</li>
+						<li class="mt-0"> <i class="ti-bar-chart-alt bg-success-gradient text-white product-icon"></i> <span class="font-weight-semibold mb-4 tx-14 "> العمولات المدفوعة :</span> <a href="#" class="float-left tx-11 text-muted">{{Carbon\Carbon::parse(App\Models\PaidCommission::latest()->first()->created_at)->format('d M ,Y')}} اخر تحديث</a>
+							<p class="mb-0 text-muted tx-12">{{App\Models\PaidCommission::sum('paid')}} جنية</p>
+						</li>
+						<li class="mt-0"> <i class="ti-wallet bg-warning-gradient text-white product-icon"></i> <span class="font-weight-semibold mb-4 tx-14 ">إجمالي العمولات :<span class="font-weight-semibold mb-4 tx-14 "></span> <a href="#" class="float-left tx-11 text-muted">{{Carbon\Carbon::parse(App\Models\Order::latest()->first()->created_at)->format('d M ,Y')}} اخر تحديث</a>
+							<p class="mb-0 text-muted tx-12">{{$orders->sum('total_price') * $settings->app_commission /100}} جنية</p>
+						</li>
+						<li class="mt-0 mb-0"> <i class="icon-note icons bg-primary-gradient text-white product-icon"></i> <span class="font-weight-semibold mb-4 tx-14 ">التقييمات</span> <a href="#" class="float-left tx-11 text-muted">{{Carbon\Carbon::parse(App\Models\Review::latest()->first()->created_at)->format('d M ,Y')}} اخر تحديث</a>
+							<p class="mb-0 text-muted tx-12">{{App\Models\Review::count()}} تقييم :</p>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="col-xl-4 col-md-12 col-lg-6">
+			<div class="card">
+				<div class="card-header">
+					<h3 class="card-title mb-2">الطلبات الحالية</h3>
+					<p class="tx-12 mb-0 text-muted">طلبات تحت الموافقة وطلبات تمت الموافقة عليها وتحت التجهيز</p>
+				</div>
+				<div class="card-body sales-info">
+					<div id="chart" class="ht-150"></div>
+					<div class="row sales-infomation pb-0 mb-0 mx-auto wd-100p">
+						<div class="col-md-6 col">
+							<p class="mb-0 d-flex"><span class="legend bg-primary brround"></span>تحت الموافقة </p>
+							<h3 class="mb-1">{{$orders->where('status',1)->count()}} طلب</h3>
+						</div>
+						<div class="col-md-6 col">
+							<p class="mb-0 d-flex"><span class="legend bg-info brround"></span> جاري تجهيزها</p>
+							<h3 class="mb-1">{{$orders->where('status',2)->count()}} طلب</h3>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row row-sm row-deck">
+		<div class="col-md-12 col-lg-4 col-xl-4">
+			<div class="card card-dashboard-eight pb-2">
+				<h6 class="card-title">العملاء المميزين</h6><span class="d-block mg-b-10 text-muted tx-12">اكثر العملاء طلبا</span>
+                @php
+                    $repeated = App\Models\Order::latest()->select('client_id','total_price')->get();
+                    $clients = $orders->pluck('client_id')->toArray();
+                    $vals = array_count_values($clients);
+
+                    arsort($vals);
+                    $all_ids = array_keys($vals);
+                    $ids = array_slice($all_ids,0,5);
+                    $topClients = App\Models\Client::whereIn('id',$ids)->get();
+                @endphp
+                <div class="list-group">
+                    @foreach($topClients as $topClient)
+                        <div class="list-group-item border-top-0">
+                            <p>{{$topClient->name}}</p><span>{{$topClient->orders->count()}} طلب</span>
+                        </div>
+                    @endforeach
+                    <br>
+                </div>
+			</div>
+		</div>
+		<div class="col-md-12 col-lg-8 col-xl-8">
+			<div class="card card-table-two">
+				<div class="d-flex justify-content-between">
+					<h4 class="card-title mb-1">حالة الطلبات</h4>
+					<i class="mdi mdi-dots-horizontal text-gray"></i>
+				</div>
+				<span class="tx-12 tx-muted mb-3 ">تتبع حالة الطلبات</span>
+				<div class="table-responsive country-table">
+					<table class="table table-striped table-bordered mb-0 text-sm-nowrap text-lg-nowrap text-xl-nowrap">
+						<thead>
+							<tr>
+								<th class="wd-lg-20p">تحت الموافقة</th>
+								<th class="wd-lg-20p tx-right">تحت التجهير</th>
+								<th class="wd-lg-20p tx-right">مرفوض</th>
+								<th class="wd-lg-20p tx-right">تم التسليم </th>
+								<th class="wd-lg-20p tx-right">تم الإسترجاع</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>{{$orders->where('status',1)->count()}} طلب</td>
+								<td class="tx-right tx-medium tx-inverse">{{$orders->where('status',2)->count()}} طلب</td>
+								<td class="tx-right tx-medium tx-danger">{{$orders->where('status',3)->count()}} طلب</td>
+								<td class="tx-right tx-medium tx-inverse">{{$orders->where('status',4)->count()}} طلب</td>
+								<td class="tx-right tx-medium tx-danger">{{$orders->where('status',5)->count()}} طلب</td>
+							</tr>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Container closed -->
 @endsection
 @section('js')
 @endsection

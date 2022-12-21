@@ -10,7 +10,7 @@ use App\Models\Setting;
 use App\Traits\FcmTrait;
 use App\Models\Restaurant;
 use App\Models\Notification;
-use App\Models\PaidCommession;
+use App\Models\PaidCommission;
 use Illuminate\Http\Request;
 use App\Traits\ApiResponseTrait;
 use App\Http\Controllers\Controller;
@@ -57,14 +57,15 @@ class OrderController extends Controller
         ]);
 
         $cost = 0;
-
-            foreach($request->items as $addedItem){
+        foreach($request->items as $addedItem){
             $item = Item::find($addedItem['item_id']);
             $pivotRow = [
                 $addedItem['item_id'] => [
                     'qty' => $addedItem['qty'],
                     'item_price' => $item->price,
+                    'total_price' => $addedItem['qty'] * $item->price,
                     'add_special' => isset($addedItem['add_special']) ? $addedItem['add_special'] : '',
+                    'preparation_time' => $item->preparation_time,
                 ]
             ];
 
@@ -72,6 +73,7 @@ class OrderController extends Controller
 
             $cost += ($item->price * $addedItem['qty']);
 
+        }
             if($cost > $restaurant->min_order_charge){
                 $costWithDelivery = $cost + $restaurant->delivery_fees;
                 $orderCommission = (Setting::first()->app_commission) * $costWithDelivery /100;
@@ -83,12 +85,11 @@ class OrderController extends Controller
                     'commission_fees' => $orderCommission,
                 ]);
 
-
                 //create notification to restaurant
                 $notification = $restaurant->notifications()->create([
                     'title'=> 'طلب جديد',
                     'body'=> $request->user()->name .'لديك طلب جديد من العميل ',
-                    'restaurant_id'=>$restaurant->id,
+                    'notifiable_id'=>$restaurant->id,
                     'order_id' => $order->id
                 ]);
 
@@ -106,14 +107,12 @@ class OrderController extends Controller
                 $this->notifyByFirebase($title,$body,$tokens,$data);
                 return $this->apiResponse('200','notification sent successfully',['data' =>$data]);
 
-
-
-             } else {
+            } else {
                 $order->items()->delete();
                 $order->delete();
                 return $this->apiResponse(0 ,  ' عذرا اقل تكلفة للطلب هي ' . $restaurant->min_order_charge . 'جنية');
-             }
-        }
+            }
+
     }
 
     //restaurant accept order
@@ -122,11 +121,8 @@ class OrderController extends Controller
         $restaurant = $request->user();
         $order = Order::find($request->order_id);
 
-
-
             $order->status = 2 ;
             $order->save();
-
 
             ///notification is_read
             $notification = Notification::where('order_id',$order->id)->where('restaurant_id',$restaurant->id)->first();
@@ -159,7 +155,7 @@ class OrderController extends Controller
             //send notification to restaurant devices using fcm
             $this->notifyByFirebase($title,$body,$tokens,$data);
 
-        
+
 
         return $this->apiResponse('200','Restaurant accept your order',[
             'order' => $order,
@@ -442,7 +438,7 @@ class OrderController extends Controller
         $totalOrders = Order::where('restaurant_id',$request->user()->id)->sum('total_price');
         $totalCommessions = ($totalOrders * 10 )/ 100;
 
-        $totalPayments = PaidCommession::where('restaurant_id',$request->user()->id)->sum('paid');
+        $totalPayments = PaidCommission::where('restaurant_id',$request->user()->id)->sum('paid');
         $remainning= $totalCommessions - $totalPayments;
 
         return $this->apiResponse('200','Get commissions successfully',
@@ -451,10 +447,6 @@ class OrderController extends Controller
             'totalCommessions' =>$totalCommessions,
              'totalPayments' => $totalPayments,
              'remainning' => $remainning,
-         ]);
+        ]);
     }
-
-
-
-
 }

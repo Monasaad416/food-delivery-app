@@ -12,7 +12,7 @@ class CreateSettingsTable extends Migration {
 			$table->increments('id');
 			$table->string('email');
 			$table->text('about_us')->nullable();
-			$table->decimal('app_commession');
+			$table->decimal('app_commission');
 			$table->string('commission_text');
 			$table->timestamps();
 		});

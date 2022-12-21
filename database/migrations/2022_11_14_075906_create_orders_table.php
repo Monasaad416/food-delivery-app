@@ -15,7 +15,7 @@ class CreateOrdersTable extends Migration {
 			$table->integer('payment_method_id');
 			// $table->integer('preparation_time');
 			$table->string('notes')->nullable();
-			$table->tinyInteger('availability')->default(Order::PENDING);
+			$table->tinyInteger('status')->default(Order::PENDING);
 			$table->decimal('order_price');
 			$table->decimal('delivery_fees');
 			$table->decimal('total_price');

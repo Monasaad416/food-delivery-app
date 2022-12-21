@@ -23,23 +23,38 @@ class Order extends Model
     {
         return match($this->status)
         {
-            self::PENDING => 'pending',
-            self::ACCEBTED => 'accebted',
-            self::REJECTED => 'rejected',
-            self::DELIVERED => 'delivered',
-            self::DECLINED => 'declined',
+            self::PENDING => 'تحت الدراسة',
+            self::ACCEBTED => 'تمت الموافقة',
+            self::REJECTED => 'مرفوض',
+            self::DELIVERED => 'تم الإستلام ',
+            self::DECLINED => 'مسترجع',
 
             default => 'unknown',
         };
     }
 
-    public static function status(){
-        return [self::PENDING,
+    public function style()
+    {
+        return match($this->status)
+        {
+            self::PENDING => 'warning',
+            self::ACCEBTED => 'info',
+            self::REJECTED => 'danger',
+            self::DELIVERED => 'success',
+            self::DECLINED => 'danger',
+
+            default => 'unknown',
+        };
+    }
+
+    public static function getStatus(){
+        return [
+                self::PENDING,
                 self::ACCEBTED,
                 self::REJECTED,
                 self::DELIVERED,
                 self::DECLINED
-                ];
+            ];
     }
 
 
@@ -59,7 +74,7 @@ class Order extends Model
         return $this->belongsTo('App\Models\Client');
     }
 
-    public function restaurants()
+    public function restaurant()
     {
         return $this->belongsTo('App\Models\Restaurant');
     }

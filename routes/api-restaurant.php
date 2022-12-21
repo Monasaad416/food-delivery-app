@@ -28,6 +28,8 @@ Route::prefix('/restaurant')->group(function(){
     Route::post('/login',[AuthController::class,'login']);
     Route::post('/reset-password',[AuthController::class,'resetPassword']);
     Route::post('/new-password',[AuthController::class,'sendNewPassword']);
+    Route::post('/register-device-token',[AuthController::class,'registerDeviceToken']);
+    Route::post('/remove-device-token',[AuthController::class,'removeDeviceToken']);
 
     Route::middleware('auth:sanctum')->group(function() {
         Route::post('/logout',[AuthController::class,'logout']);
@@ -36,12 +38,12 @@ Route::prefix('/restaurant')->group(function(){
         Route::post('/update-profile',[AuthController::class,'updateProfile']);
 
         Route::post('/create-item',[ItemController::class,'createItem']);
-        Route::post('/edit-item/{restaurantId}/{ItemId}',[ItemController::class,'editItem']);
-        Route::post('/delete-item/{restaurantId}/{ItemId}',[ItemController::class,'deleteItem']);
+        Route::post('/edit-item/{itemId}',[ItemController::class,'editItem']);
+        Route::post('/delete-item/{itemId}',[ItemController::class,'deleteItem']);
 
         Route::post('/create-offer',[OfferController::class,'createOffer']);
-        Route::post('/edit-offer/{restaurantId}/{OfferId}',[OfferController::class,'editOffer']);
-        Route::post('/delete-offer/{restaurantId}/{OfferId}',[OfferController::class,'deleteOffer']);
+        Route::post('/edit-offer/{offerId}',[OfferController::class,'editOffer']);
+        Route::post('/delete-offer/{offerId}',[OfferController::class,'deleteOffer']);
 
         Route::post('/accept-order',[OrderController::class,'acceptOrder']);
         Route::post('/reject-order',[OrderController::class,'rejectOrder']);

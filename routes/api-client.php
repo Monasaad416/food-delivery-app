@@ -23,6 +23,8 @@ Route::prefix('/client')->group(function(){
     Route::post('/login',[AuthController::class,'login']);
     Route::post('/reset-password',[AuthController::class,'resetPassword']);
     Route::post('/new-password',[AuthController::class,'sendNewPassword']);
+    Route::post('/register-device-token',[AuthController::class,'registerDeviceToken']);
+    Route::post('/remove-device-token',[AuthController::class,'removeDeviceToken']);
 
 
     Route::middleware('auth:sanctum')->group( function() {
@@ -39,10 +41,12 @@ Route::prefix('/client')->group(function(){
 
         Route::get('/orders',[OrderController::class,'clientOrders']);
         Route::get('/current-orders',[OrderController::class,'clientCurrentOrders']);
-        Route::get('/previews-orders',[OrderController::class,'clientPreviousOrders']);
+        Route::get('/previous-orders',[OrderController::class,'clientPreviousOrders']);
 
-        Route::Post('/read-notification',[OrderController::class,'readNotification']);
+        Route::post('/read-notification',[OrderController::class,'readNotification']);
         Route::get('/notifications',[OrderController::class,'clientNotifications']);
+
+
 
     });
 

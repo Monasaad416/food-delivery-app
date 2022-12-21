@@ -32,21 +32,29 @@ class ItemController extends Controller
             }
 
         $path = Storage::putFile('items', $request->file('image'));
-        $item = Item::create($request->all());
-        $item->update([
-            'image' => $path,
-        ]);
+        if($request->restaurant_id == $request->user()->id){
+            $item = Item::create($request->all());
+            $item->update([
+                'image' => $path,
+            ]);
+            return $this->apiResponse('200','تم إضافة وجبة بنجاح',[
+                'item' => $item,
+            ]);
+        } else {
+            return $this->apiResponse('0','الرقم التعريفي للمطعم غير صحيح');
+        }
+        
+    
 
 
-        return $this->apiResponse('200','Item added successfully',[
-            'item' => $item,
-        ]);
+    
     }
 
-    public function editItem(Request $request,$restaurantId,$offerId)
+    public function editItem(Request $request,$itemId)
     {
-        $item = Item::find($offerId);
-        if($item->restaurant_id == $restaurantId)
+        $item = Item::find($itemId);
+
+        if($item->restaurant_id == $request->user()->id)
         {
             $path = $item->image;
 
